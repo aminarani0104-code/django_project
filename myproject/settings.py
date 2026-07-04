@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import dj_database_url
+
+import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i7c8e*t00s*kpzd#xc4hb)bgos24a4*bzltz06s&48(0qodg9e'
-
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-i7c8e*t00s*kpzd#xc4hb)bgos24a4*bzltz06s&48(0qodg9e"
+)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -42,13 +46,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -75,12 +79,10 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(
-       "postgresql://neondb_owner:npg_t4KIq6lGwXNo@ep-fancy-king-atle8dpl.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require"
-
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
     )
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -119,3 +121,4 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'productionfiles'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
