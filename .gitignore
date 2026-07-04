@@ -1,0 +1,25 @@
+# Virtual Environment
+amina/
+venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Database
+db.sqlite3
+
+# Environment Variables
+.env
+
+# Static Files
+productionfiles/
+mystaticfiles/
+
+# VS Code
+.vscode/
+
+__pycache__/
+*.py[cod]
